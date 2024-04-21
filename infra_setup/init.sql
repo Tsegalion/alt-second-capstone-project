@@ -17,14 +17,14 @@ FROM '/data/products.csv' DELIMITER ',' CSV HEADER;
 -- create the customers table
 create table if not exists ALT_SCHOOL.CUSTOMERS
 (
-    id uuid primary key,
+    customer_id uuid primary key,
     device_id uuid not null,
     location varchar not null,
-    currency varchar not null
+    currency varchar not null --changed the datatype from bigint as provided by the ERD because the data in the CSV is of character type.
 );
 
 -- provide command to copy ALT_SCHOOL.CUSTOMERS data into POSTGRES
-COPY ALT_SCHOOL.CUSTOMERS (id, device_id, location, currency)
+COPY ALT_SCHOOL.CUSTOMERS (customer_id, device_id, location, currency)
 FROM '/data/customers.csv' DELIMITER ',' CSV HEADER;
 
 -- create the orders table

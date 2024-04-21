@@ -28,21 +28,21 @@ LIMIT 1;
 
 -- Select the customer_id, location, and calculate the total spend for each customer
 SELECT 
-    C.id AS customer_id, 
+    C.customer_id AS customer_id, 
     C.location, 
     SUM(P.price * (E.event_data->>'quantity')::int) AS total_spend -- Calculate the total spend by multiplying the price of each product by the quantity added to the cart
 FROM 
     ALT_SCHOOL.CUSTOMERS AS C
 JOIN 
-    ALT_SCHOOL.EVENTS AS E ON E.customer_id = C.id -- Join with the EVENTS table on the customer_id
+    ALT_SCHOOL.EVENTS AS E ON E.customer_id = C.customer_id -- Join with the EVENTS table on the customer_id
 JOIN 
     ALT_SCHOOL.PRODUCTS AS P ON P.id = (E.event_data->>'item_id')::int -- Join with the PRODUCTS table on the item_id
 JOIN 
-    ALT_SCHOOL.ORDERS AS O ON O.customer_id = C.id -- Join with the ORDERS table on the customer_id
+    ALT_SCHOOL.ORDERS AS O ON O.customer_id = C.customer_id -- Join with the ORDERS table on the customer_id
 WHERE 
     -- Filter for successful orders where the event type is 'add_to_cart'
     O.status = 'success' AND E.event_data->>'event_type' = 'add_to_cart'
-GROUP BY C.id, C.location
+GROUP BY C.customer_id, C.location
 ORDER BY total_spend DESC
 LIMIT 5; -- Limit the results to the top 5 customers with the highest total spend
 
@@ -58,9 +58,9 @@ SELECT
 FROM 
     ALT_SCHOOL.EVENTS AS E
 JOIN 
-    ALT_SCHOOL.CUSTOMERS AS C ON E.customer_id = C.id -- Join with the CUSTOMERS table on the customer_id
+    ALT_SCHOOL.CUSTOMERS AS C ON E.customer_id = C.customer_id -- Join with the CUSTOMERS table on the customer_id
 JOIN 
-    ALT_SCHOOL.ORDERS AS O ON O.customer_id = C.id -- Join with the ORDERS table on the customer_id
+    ALT_SCHOOL.ORDERS AS O ON O.customer_id = C.customer_id -- Join with the ORDERS table on the customer_id
 WHERE 
     -- Filter for successful checkouts
     O.status = 'success' AND E.event_data->>'event_type' = 'checkout'
